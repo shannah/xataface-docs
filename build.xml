@@ -1,0 +1,79 @@
+<project name="dataface" default="all" basedir=".">
+
+   <taskdef 
+   		name="jsdoctoolkit" 
+   		classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" 
+   		classpath="./build_tools/jsdoc/java/classes/jsdoc-toolkit-ant-task-1.1.2.jar:./build_tools/jsdoc/java/classes/js.jar"
+   	/>
+   <target name="init">
+   	  <property name="sourceDir" value="."/>
+      <property name="libDir" value="lib"/>
+      <property name="outputDir" value="/tmp/dataface-build" />
+      <property name="docsDir" value="docs" />
+      <property name="testsDir" value="tests" />
+      <property name="tablesDir" value="tables" />
+      <property name="casOutputDir" value="/tmp/dataface_cas_module" />
+      <property name="sourceGuardianEncode5" value="/usr/local/php5/sg6/bin/encode5"/>
+      <property name="feedburnerOutputDir" value="/tmp/dataface_feedburner_module" />
+      <property name="doxygen" value="/usr/local/opt/doxygen/bin/doxygen"/>
+   </target>
+
+   <target name="clean" depends="init">
+       
+   	  <delete dir="build"/>
+   </target>
+
+   
+  
+   
+   <target name="jsdoc" depends="init" description="Generate jsdoc documentation">
+        <mkdir dir="build"/>
+        <exec executable="git" dir="build">
+            <arg value="clone"/>
+            <arg value="https://github.com/shannah/xataface"/>
+        </exec>
+		<jsdoctoolkit 
+			jsdochome="./build_tools/jsdoc/" 
+			template="jsdoc" 
+			outputdir="./build/xataface-jsdoc/" 
+			>
+   			<fileset dir="build/xataface/js/">
+   				<include name="**/*.js"/>
+   			</fileset>
+   			<fileset dir="build/xataface/modules/XataJax/js/">
+   				<include name="**/*.js"/>
+   			</fileset>
+   		</jsdoctoolkit>
+   		<echo message="JSDoc docs generated to build/xataface-jsdoc"/>
+   </target>
+   
+   <target name="doxygen" depends="init" description="Generate Doxygen Docs">
+        <mkdir dir="build"/>
+        <exec executable="git" dir="build">
+            <arg value="clone"/>
+            <arg value="https://github.com/shannah/xataface"/>
+        </exec>
+        <mkdir dir="build/xataface/doc"/>
+        <delete dir="build/xataface/doc"/>
+        <copy todir="build/xataface/doc">
+            <fileset dir="doxygen-docs" includes="**"/>
+        </copy>
+        <loadfile property="xataface.version" srcFile="build/xataface/version.txt"/>
+        <replace file="build/xataface/doc/Doxyfile" token="{PROJECT_NUMER}" value="${xataface.version}"/>
+        <exec dir="build/xataface/doc" executable="${doxygen}"/>
+        <property name="docs.output.dir" value="xataface-doxygen-docs"/>
+        
+        <delete dir="build/${docs.output.dir}"/>
+        <mkdir dir="build/${docs.output.dir}"/>
+        <copy todir="build/${docs.output.dir}">
+            <fileset dir="build/xataface/doc_output/html" includes="**"/>
+        </copy>
+        <!--<delete dir="build/xataface"/>-->
+        <echo message="Doxygen docs generated to build/${docs.output.dir}"/>
+   </target>
+   
+   <target name="all" depends="doxygen,jsdoc" description="Generate All Documentation"/>
+   
+   
+
+</project>
