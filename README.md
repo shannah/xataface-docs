@@ -34,4 +34,12 @@ To build all docs, simply run:
 $ ant
 ~~~~
 
-And your docs will be generated in the build directory.
+NOTE:  You will likely need to provide the path to doxygen as follows:
+
+~~~~
+$ ant -Ddoxygen=/path/to/doxygen
+~~~~
+
+The hard-coded path in the build file points to the location on my build machine.
+
+Docs will be generated inside the build directory.
