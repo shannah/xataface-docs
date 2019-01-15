@@ -1,8 +1,8 @@
-#Xataface Full-Site Search
+# Xataface Full-Site Search
 
 Xataface supports an optional full-site, full-text search that allows the user to search multiple tables at once in the top search box.
 
-##Activating Full-Text Search
+## Activating Full-Text Search
 
 1. Add a `[_index]` section to your app's conf.ini file.
 2. For each table that you wish to be searchable in the full-site search, add a line to the `[_index]` section as follows:
@@ -47,7 +47,7 @@ Xataface supports an optional full-site, full-text search that allows the user t
     * A "relevance" meter is shown for each match.  This is pulled from the MySQL full-text index.
 
 
-##Fuzzy Matching / Finding Misspellings
+## Fuzzy Matching / Finding Misspellings
 
 As of Xataface 2.1.2, the full-site search will now match misspellings.  For example, if we modify the search from the above example for "cardiac", and instead search for "crdiac", we will receive the same results. 
 
@@ -55,7 +55,7 @@ As of Xataface 2.1.2, the full-site search will now match misspellings.  For exa
 
 Xataface automatically adds the soundex codes for each word in a record's searchable text, to the record's searchable text.  This makes it possible to search the index for soundex codes as well as the actual content.  [Soundex](http://en.wikipedia.org/wiki/Soundex) is a phonetic algorithm for indexing names by sound, as pronounced in English. Since misspellings of words often produce the same soundex code as the original word, this works well for finding matches on queries even when words are misspelled.
 
-##How the Site Search Works
+## How the Site Search Works
 
 The Xataface full-site search leverages MySQL's fulltext search functionality to be able to sort matches by relevance.  When the site search is enabled, it causes all records to be "indexed" when they are saved through Xataface.  It also provides a mechanism to clear and re-index the database manually.  "Indexing" a record involves generating a corresponding record into the `dataface__index` table, which is a private table created automatically by Xataface to house the index for the site search. The structure of this table is as follows:
 
@@ -83,9 +83,9 @@ The relevant code for indexing is limited to only a few classes and actions:
 2. **[The Build Index Action](../actions/manage_build_index.php)** - The manager action for rebuilding the index manually.
 3. **[The Index Search Action](../actions/manage_build_index.php)** - The action to actually search the index.
 
-##Customizing Site Search
+## Customizing Site Search
 
-###Customizing Searchable Text
+### Customizing Searchable Text
 
 The full-site search works by indexing all of the records in the designated tables (i.e. the tables listed in the `[_index]` section of your conf.ini file), and this entails creating a record in the `dataface__index` table.  Actual user searches are performed by matching the user query against the MySQL full-text index that resides in the `searchable_text` column of this table.  By default, Xataface uses the concatenation of all text (i.e. `CHAR`, `VARCHAR`, `TEXT`, etc..) field values as the searchable text for a record.
 
@@ -99,7 +99,7 @@ function getSearchableText(Dataface_Record $record){
 }
 ~~~
 
-###Customizing Search Results 
+### Customizing Search Results 
 
 **Title & Description**:
 
@@ -133,7 +133,7 @@ function getPublicLink(Dataface_Record $record){
 
 If you need more customization than can be achieved via the title, description, and link options mentioned above, you can also override the entire [search results template](../Dataface/templates/Dataface_Search_Results.html) by copying it into your application's `templates` directory and customizing it to suit your needs.
 
-###Changing Order In Search Select List
+### Changing Order In Search Select List
 
 By default, the "Site Search" option is selected in the top search menu.  That means that, if the user just types in a search word and hits enter, they will be shown the results for the multi-table search instead of the normal single-table search.  If you want to change this, you can simply override the `search_index` action and change its `order` directive.
 
