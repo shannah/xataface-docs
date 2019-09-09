@@ -1,6 +1,6 @@
-#Xataface Actions
+# Xataface Actions
 
-##Contents
+## Contents
 
 1. [Synopsis](#synopsis)
 2. [Routing](#routing)
@@ -23,7 +23,7 @@
 
 Actions are the entry points to a Xataface application.  They are essentially PHP scripts the run in the context of a Xataface HTTP request/response cycle.  Xataface includes core actions to perform all of the common tasks of a database application (e.g. List, View, Edit Record, New Record, Add Related Record, Export CSV, etc...), and it also provides an API for you to define you to define your own actions.  You can define custom actions at the application level (i.e. that are for use only by a single application) and at the module level (i.e. that can be reused by multiple applications).
 
-##Routing
+## Routing
 
 Use the `-action` HTTP request parameter to specify which action should be used to handle a given HTTP request.  E.g.
 
@@ -35,7 +35,7 @@ will be routed to the *list* action (i.e. shows the current result set as a list
 
 will be routed to the *edit* action (i.e. shows a form to edit the current record).
 
-##Core Xataface Actions
+## Core Xataface Actions
 
 | Action Name | Description |
 |---|---|
@@ -60,7 +60,7 @@ This is just a small sample of the actions that are included with Xataface.  For
 
 Many of the actions defined in the [actions](../actions) folder are not intended to be directly accessed, but rather, provide REST APIs that are used by internal javascript libraries.
 
-##Action Configuration
+## Action Configuration
 
 Actions have two components:
 
@@ -80,7 +80,7 @@ Notice than many of these options pertain to the way that actions are rendered a
 
 See the [Xataface actions.ini file](../actions.ini), and the [g2 module actions.ini file](../modules/g2/actions.ini) for a full list of core actions and their associated configuration directives.
 
-##Action Menus
+## Action Menus
 
 Most Xataface templates/pages include one or more menus.  E.g. Most pages include the following menus:
 
@@ -91,7 +91,7 @@ Most Xataface templates/pages include one or more menus.  E.g. Most pages includ
 
 These menus are generated based on the *category* directive of actions defined in the *actions.ini* file.
 
-###Core Action Categories
+### Core Action Categories
 
 There are many action categories, and module and application developers can create their own categories, so there can be an unlimited number of categories.  However, the following are some of the common categories in Xataface:
 
@@ -121,7 +121,7 @@ There are many action categories, and module and application developers can crea
 * `edit_record_form_actions` : Actions appear on the toolbar of the *edit record* form in the g2 theme.
 * `advanced_search_actions` : Actions appearing inside the *advanced search* window.
 
-##Custom Actions
+## Custom Actions
 
 Xataface allows you to create your own custom actions for your application by creating an `actions.ini` file inside the root directory of your application.  The general format of the `actions.ini` file is:
 
@@ -145,7 +145,7 @@ The format is the same as the [Xataface actions.ini file](../actions.ini) so the
 
 In addition to an *actions.ini file* entry, a custom action generally needs to have a corresponding PHP class located inside the application's `actions` directory with the same file name (not including the `.php` suffix) as the action itself, and the class name in the form `actions_ACTIONNAME` (where *ACTIONNAME* is the name of the action.
 
-###Hello World Action
+### Hello World Action
 
 A Simple *Hello World* action might look like the following:
 
@@ -185,7 +185,7 @@ Hello World
 
 <a name="directives"></a>
 
-###actions.ini Directives
+### actions.ini Directives
 
 Some of the key directives in the actions.ini file :
 
@@ -209,7 +209,7 @@ Some of the key directives in the actions.ini file :
 To see how actions are rendered, you might find it helpful to look at the [Dataface_ActionsMenu.html template](../Dataface/templates/Dataface_ActionsMenu.html) which is used to render many of the action menus in Xataface.  Although it is important to note that the actions infrastructure is foundational to Xataface and can be used to generate menus in many different ways.
 
 
-###Action Inheritance
+### Action Inheritance
 
 Xataface supports inheritance with actions using the following syntax:
 
@@ -228,7 +228,7 @@ E.g. Suppose you wanted to create an action "filtered_list" that is the same as 
     label="Approved List"
 ~~~
 
-###Overriding Existing Actions
+### Overriding Existing Actions
 
 Actions, in Xataface, are loaded from various actions.ini files in the following order:
 
@@ -267,7 +267,7 @@ What this does is creates a new action named *list* that inherits all of the con
 ~~~
 
 
-###Hiding Actions
+### Hiding Actions
 
 The vanilla Xataface install includes lots of menus with useful functions - but some applications don't require all of these functions.  For example, the list view includes an *Export XML* action.  If you want to hide this so that it doesn't show up, you can easily do this by overriding the *export_xml* action, and changing the category to something that isn't used, like an empty string:
 
@@ -278,7 +278,7 @@ The vanilla Xataface install includes lots of menus with useful functions - but 
 
 **NOTE: Before using this approach to hide actions from your UI, take a moment to consider whether you want to prevent users from accessing this functionality or if you just want the button hidden.  Hiding the menu item won't actually block users from accessing this functionality because they can still access it with a well-crafted URL.  If you actually want to block access, then you should use permissions instead to deny access to the action.**
 
-##Action Permissions
+## Action Permissions
 
 By default all actions are publicly accessible.  There are two ways to limit access to an action:
 
@@ -316,7 +316,7 @@ This uses the Xataface API (particularly the `Dataface_Record::checkPermission()
 
 <a name="expressions"></a>
 
-##PHP Expressions in actions.ini Directives
+## PHP Expressions in actions.ini Directives
 
 There are three types of directives that can be included in an action definition:
 
@@ -324,7 +324,7 @@ There are three types of directives that can be included in an action definition
 2. **Boolean Expressions**. These are evaluated as PHP expressions that resolve to a boolean value.  Any directive whose name ends with "condition" is treated as a *Boolean Expression*.
 3. **String**.  These are evaluated as PHP strings, so they can contain PHP expressions inside curly braces `{}`, just like double-quoted PHP strings can.  All non-static directives other than "condition" properties are treated as strings.
 
-###Expression Context
+### Expression Context
 
 PHP expressions run inside boolean expressions and String expressions are executed in a limited context with only a small handful of special variables accessible:
 
@@ -368,7 +368,7 @@ url_condition="$record"
 
 Xataface will always execute the `url_condition` directive before trying to parse the `url` directive.  If `$record` is null, it will not execute the `url` directive, and by doing so, avoid a fatal error.
 
-###Debugging Action Expressions
+### Debugging Action Expressions
 
 In order to avoid PHP notices when executing string and boolean expressions, Xataface suppresses errors during their execution.  Unfortunately, this makes it difficult to debug fatal errors that may occur as a result of executing an action expression.  The common symptom is *the blank white screen of death*.  If you are getting a blank white screen and you have no viable clues in your PHP error log, there is a good chance that there is an error happening during the execution of your of your action expressions.
 
